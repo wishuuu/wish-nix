@@ -1,0 +1,31 @@
+{
+  inputs,
+  lib,
+  config,
+  pkgs,
+  ...
+}: {
+  home.packages = with pkgs; [ 
+    turso-cli
+    gnumake
+    gimp
+    xclip
+    bat
+    bottom
+    jq
+    jqp
+    dua
+    fd
+    lazygit
+    fzf
+    tldr
+    ripgrep
+    wireshark
+    termshark
+    docker
+    postman
+    newman
+    gh
+    lastpass-cli
+  ];
+}
