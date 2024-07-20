@@ -14,6 +14,9 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  system.autoUpgrade.enable = true;
+  system.autoUpgrade.allowReboot = true;
+
   networking.hostName = "ovsoft"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -44,6 +47,8 @@
     LC_TIME = "pl_PL.UTF-8";
   };
 
+  programs.hyprland.enable = true;
+
   services.xserver = {
     enable = true;
     desktopManager = {
@@ -54,7 +59,13 @@
         enableXfwm = false;
       };
     };
-    displayManager.defaultSession = "xfce+i3";
+    displayManager = {
+      defaultSession = "hyprland";
+      gdm = {
+        enable = true;
+        wayland = true;
+      };
+    };
     windowManager.i3 = 
     { 
       enable = true; 
@@ -112,13 +123,24 @@
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    vim 
-    wget
-    curl
+  environment.systemPackages = [
+    pkgs.vim 
+    pkgs.wget
+    pkgs.curl
+    pkgs.waybar
+    (pkgs.waybar.overrideAttrs (oldAttrs: {
+        mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
+      })
+    )
+    pkgs.dunst
+    pkgs.kitty
+    pkgs.wofi
+    pkgs.dolphin
   ];
 
   programs.git.enable = true;
+  xdg.portal.enable = true;
+  xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk];
   
 
   # Some programs need SUID wrappers, can be configured further or are
