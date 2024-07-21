@@ -27,6 +27,17 @@
   # Enable networking
   networking.networkmanager.enable = true;
 
+  systemd.user.services.background = {
+    description = "Start swww and load background image";
+    serviceConfig.PassEnvironment = "DISPLAY";
+    script = ''
+        swww-daemon &
+        swww img ~/.config/ig/bg/mountains.jpg
+        waybar &
+    '';
+    wantedBy = [ "multi-user.target" ];
+  };
+
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   # Set your time zone.
@@ -127,20 +138,25 @@
     pkgs.vim 
     pkgs.wget
     pkgs.curl
-    pkgs.waybar
-    (pkgs.waybar.overrideAttrs (oldAttrs: {
-        mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
-      })
-    )
     pkgs.dunst
     pkgs.kitty
     pkgs.wofi
     pkgs.dolphin
+    pkgs.swww
+    pkgs.wl-clipboard
   ];
 
   programs.git.enable = true;
+
   xdg.portal.enable = true;
   xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk];
+
+  programs.waybar.enable = true;
+
+  fonts.packages = with pkgs; [
+    jetbrains-mono
+    nerd-font-patcher
+  ];
   
 
   # Some programs need SUID wrappers, can be configured further or are
