@@ -1,3 +1,4 @@
+{pkgs, ...}:
 {
   programs = {
     git = {
@@ -8,9 +9,10 @@
 
       extraConfig = {
         core.editor = "nvim";
-        github.user = "OskarWiszowaty";
+        github.user = "wishuuu";
         mergetool.prompt = false;
         pull.rebase = false;
+        credential.helper = "store";
       };
 
       aliases = {

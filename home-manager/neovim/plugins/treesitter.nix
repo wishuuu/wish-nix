@@ -19,5 +19,6 @@
     };
 
     hmts.enable = true;
+    ts-autotag.enable = true;
   };
 }

@@ -1,7 +1,9 @@
 {
   imports = [
     ./comment.nix
+    ./copilot.nix
     ./efm.nix
+    ./git.nix
     ./harpoon.nix
     ./lsp.nix
     ./lualine.nix
@@ -17,6 +19,7 @@
     plugins = {
       
       nvim-autopairs.enable = true;
+      surround.enable = true;
 
       #trim = {
       #  enable = true;

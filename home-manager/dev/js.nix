@@ -10,4 +10,15 @@
 
   };
 
+  programs.nixvim = {
+    plugins = {
+      lsp-format.lspServersToEnable = ["tsserver"];
+      lsp.servers = {
+        tsserver = {
+          enable = true;
+        };
+      };
+    };
+  };
+
 }

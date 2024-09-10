@@ -16,29 +16,18 @@
     ];
 
     extraConfig = ''
-      # Enable mouse
       set -g mouse on
-
-      # 2x C-a goes back and fourth between most recent windows
       bind-key C-a last-window
 
-      # For neovim
       set -g focus-events on
 
-      # Update the status line every seconds
       set -g status-interval 1
 
-      # auto window rename
       set -g automatic-rename
       set -g automatic-rename-format '#{pane_current_command}'
-    '';
-  };
 
-  home.shellAliases = {
-    tm = "tmux";
-    tms = "tmux new -s";
-    tml = "tmux list-sessions";
-    tma = "tmux attach -t";
-    tmk = "tmux kill-session -t";
+      set -g base-index 1
+      setw -g pane-base-index 1
+    '';
   };
 }

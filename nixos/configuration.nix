@@ -27,16 +27,22 @@
   # Enable networking
   networking.networkmanager.enable = true;
 
-  systemd.user.services.background = {
-    description = "Start swww and load background image";
-    serviceConfig.PassEnvironment = "DISPLAY";
-    script = ''
-        swww-daemon &
-        swww img ~/.config/ig/bg/mountains.jpg
-        waybar &
-    '';
-    wantedBy = [ "multi-user.target" ];
+  environment.interactiveShellInit = ''
+    if [[ $(${pkgs.procps}/bin/ps --no-header --pid=$PPID --format=comm) != "fish" && -z ''${BASH_EXECUTION_STRING} ]]
+    then
+      shopt -q login_shell && LOGIN_OPTION='--login' || LOGIN_OPTION=""
+      exec ${pkgs.fish}/bin/fish $LOGIN_OPTION
+    fi
+  '';
+
+  environment.variables = {
+    OPENSSL_DEV="${pkgs.openssl.dev}";
+    PKG_CONFIG_PATH="${pkgs.openssl.dev}/lib/pkgconfig";
   };
+
+ services.logind.extraConfig = ''
+    HandlePowerKey=ignore
+  '';
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
@@ -44,7 +50,7 @@
   time.timeZone = "Europe/Warsaw";
 
   # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
+  i18n.defaultLocale = "pl_PL.UTF-8";
 
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "pl_PL.UTF-8";
@@ -77,20 +83,11 @@
         wayland = true;
       };
     };
-    windowManager.i3 = 
-    { 
-      enable = true; 
-      extraPackages = with pkgs; [
-        dmenu
-        i3status
-        i3blocks
-      ];
-    };
   };
 
   # Configure keymap in X11
   services.xserver = {
-    layout = "us";
+    layout = "pl";
     xkbVariant = "";
   };
 
@@ -98,6 +95,8 @@
   services.printing.enable = true;
 
   # Enable sound with pipewire.
+  hardware.bluetooth.enable = true;
+  hardware.bluetooth.powerOnBoot = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -112,6 +111,7 @@
     # no need to redefine it in your config for now)
     #media-session.enable = true;
   };
+  services.blueman.enable = true;
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
@@ -120,7 +120,7 @@
   users.users.user = {
     isNormalUser = true;
     description = "Oskar Wiszowaty";
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" "audio" ];
     packages = with pkgs; [
     #  thunderbird
     ];
@@ -134,19 +134,25 @@
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = [
-    pkgs.vim 
-    pkgs.wget
-    pkgs.curl
-    pkgs.dunst
-    pkgs.kitty
-    pkgs.wofi
-    pkgs.dolphin
-    pkgs.swww
-    pkgs.wl-clipboard
+  environment.systemPackages = with pkgs; [
+    vim 
+    wget
+    curl
+    dunst
+    kitty
+    wofi
+    dolphin
+    swww
+    wl-clipboard
+    xorg.xbacklight
+    openssl
+    pavucontrol
   ];
 
   programs.git.enable = true;
+  programs.fish.enable = true;
+
+  virtualisation.docker.enable = true;
 
   xdg.portal.enable = true;
   xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-gtk];
@@ -157,6 +163,11 @@
     jetbrains-mono
     nerd-font-patcher
   ];
+
+  programs.sway = {
+    enable = true;
+    wrapperFeatures.gtk = true;
+  };
   
 
   # Some programs need SUID wrappers, can be configured further or are

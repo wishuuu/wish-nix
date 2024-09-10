@@ -1,8 +1,8 @@
 {
-    "modules-left": ["sway/workspaces", "sway/mode"],
-    "modules-center": ["clock", "idle_inhibitor"],
+    "modules-left": [],
+    "modules-center": ["clock"],
     /* "modules-right": ["tray", "custom/scratchpad-indicator", "pulseaudio", "custom/power"], */
-    "modules-right": ["tray", "custom/scratchpad-indicator", "pulseaudio", "custom/power"],
+    "modules-right": ["tray", "custom/scratchpad-indicator", "pulseaudio", "bluetooth", "network", "custom/power"],
 
     "sway/mode": {
         "format": "<span style=\"italic\">{}</span>"
@@ -14,13 +14,15 @@
         "max-length": 50,
         "on-click": "kitty -e 'nmtui'"
     },
-    "idle_inhibitor": {
-        "format": "{icon}",
-        "format-icons": {
-            "activated": "",
-            "deactivated": ""
-        },
-		"on-click": "bash /home/dg/.local/bin/toggleRemote"
+    "bluetooth": {
+        "format": " 󰂯 ",
+        "tooltip": true,
+        "tooltip-format": "Bluetooth Settings",
+        "on-click": "kitty -e 'bluetoothctl'",
+    },
+    "format-wifi": "{essid} ({signalStrength}%) ",
+        "format-ethernet": "{ifname} ",
+        "format-disconnected": "", 
     },
     "tray": {
         "icon-size": 15,

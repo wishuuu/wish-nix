@@ -7,6 +7,7 @@
 }: {
   home.packages = with pkgs; [ 
     turso-cli
+    sqld
     gnumake
     gimp
     xclip
@@ -23,9 +24,15 @@
     wireshark
     termshark
     docker
+    docker-compose
     postman
     newman
     gh
     lastpass-cli
+    discord
+    discord-screenaudio
+    keepass
+    pkg-config
+    openssl
   ];
 }
